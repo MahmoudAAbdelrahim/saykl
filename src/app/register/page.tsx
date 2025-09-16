@@ -36,13 +36,14 @@ const RegisterPage = () => {
 
       setMessage(t.accountCreated);
 
-      const newUser = {
-        name,
-        email,
-        phone,
-        role: "client",
-        userId: data.userId,
-      };
+
+const newUser: User = {
+  name,
+  email,
+  phone,
+  role: "client",            // ✅ Type literal مضبوط
+  userId: String(data.userId) // 👈 لو الـ userId مش string نحوله
+};
 
       // حفظ في localStorage + تحديث context
       localStorage.setItem("user", JSON.stringify(newUser));
