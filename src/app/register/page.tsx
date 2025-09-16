@@ -6,6 +6,15 @@ import { translations } from "../context/i18n";
 import { useRouter } from "next/navigation";
 import { useUser } from "../context/UserContext"; // استدعاء الـ context
 
+// ✅ تعريف الـ User هنا مباشرة
+type User = {
+  name: string;
+  email: string;
+  phone?: string;
+  role: "client" | "admin";
+  userId: string;
+};
+
 const RegisterPage = () => {
   const { lang } = useLanguage();
   const t = translations[lang];
@@ -36,18 +45,18 @@ const RegisterPage = () => {
 
       setMessage(t.accountCreated);
 
-
-const newUser: User = {
-  name,
-  email,
-  phone,
-  role: "client",            // ✅ Type literal مضبوط
-  userId: String(data.userId) // 👈 لو الـ userId مش string نحوله
-};
+      // ✅ نستخدم الـ type اللي فوق
+      const newUser: User = {
+        name,
+        email,
+        phone,
+        role: "client",            // ثابتة كـ client
+        userId: String(data.userId) // نحولها String احتياطي
+      };
 
       // حفظ في localStorage + تحديث context
       localStorage.setItem("user", JSON.stringify(newUser));
-login(newUser);
+      login(newUser);
 
       setTimeout(() => {
         router.push("/");
