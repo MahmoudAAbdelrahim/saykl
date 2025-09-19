@@ -6,6 +6,14 @@ import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../context/i18n";
 import { useUser } from "../context/UserContext";
 
+type User = {
+  name: string;
+  email: string;
+  phone?: string;
+  role: "client" | "admin";
+  userId: string;
+};
+
 const LoginPage = () => {
   const { lang } = useLanguage();
   const t = translations[lang];
@@ -13,13 +21,13 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
-const { login } = useUser();
+  const { login } = useUser();
 
   // ✅ لو المستخدم مسجل دخول بالفعل
   useEffect(() => {
     const userData = localStorage.getItem("user");
     if (userData) {
-      router.replace("/profile"); // أو الداشبورد
+      router.replace("/"); 
     }
   }, [router]);
 
@@ -31,17 +39,25 @@ const { login } = useUser();
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
-if (res.ok) {
-  login(data.user); // 🟢 يحدث الـ context + localStorage
-  setMessage(t.loginSuccess);
-  router.push("/"); 
-}
-      if (res.ok) {
-        // نخزن البيانات في localStorage (من غير الباسورد)
-        localStorage.setItem("user", JSON.stringify(data.user));
+
+      if (res.ok && data.user) {
+        // 🟢 ناخد الـ userId زي ما هو جاي من الـ API
+        const loggedUser: User = {
+          name: data.user.name,
+          email: data.user.email,
+          phone: data.user.phone,
+          role: data.user.role || "client",
+          userId: data.user.userId || data.user._id || "", // ✅ هنا هنضمن انه يتسحب صح
+        };
+
+        // تخزين في localStorage + context
+        localStorage.setItem("user", JSON.stringify(loggedUser));
+        login(loggedUser);
+
         setMessage(t.loginSuccess);
-        router.push("/"); // تحويل للداشبورد
+        router.push("/");
       } else {
         setMessage(data.error || t.loginFailed);
       }
@@ -59,6 +75,7 @@ if (res.ok) {
         </h1>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
+          {/* الايميل */}
           <div className="relative">
             <input
               type="email"
@@ -73,6 +90,7 @@ if (res.ok) {
             </label>
           </div>
 
+          {/* الباسورد */}
           <div className="relative">
             <input
               type="password"
@@ -95,7 +113,11 @@ if (res.ok) {
           </button>
         </form>
 
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+        {message && (
+          <p className="mt-4 text-center text-red-500 font-semibold">
+            {message}
+          </p>
+        )}
 
         <p className="text-center mt-6 text-gray-500">
           {t.dontHaveAccount}{" "}

@@ -39,8 +39,8 @@ const Navbar = () => {
           <li><Link href="/">{t.home}</Link></li>
           <li><Link href="/dashboard">{t.dashboard}</Link></li>
           <li><Link href="/products">{t.products}</Link></li>
-          <li><Link href="/admin/products">{t.manageProducts}</Link></li>
-          <li><Link href="/admin/users">{t.manageUsers}</Link></li>
+          <li><Link href="/dashboard/admin/products">{t.manageProducts}</Link></li>
+          <li><Link href="/dashboard/admin/users">{t.manageUsers}</Link></li>
           <li><Link href="/profile">{t.profile}</Link></li>
         </>
       );
@@ -51,7 +51,7 @@ const Navbar = () => {
         <li><Link href="/">{t.home}</Link></li>
         <li><Link href="/dashboard">{t.dashboard}</Link></li>
         <li><Link href="/products">{t.products}</Link></li>
-        <li><Link href="/my-products">{t.myProducts}</Link></li>
+        <li><Link href="/dashboard/client/products">{t.myProducts}</Link></li>
         <li><Link href="/profile">{t.profile}</Link></li>
       </>
     );
