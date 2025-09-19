@@ -41,11 +41,14 @@ const AdminProductsPage: React.FC = () => {
   const [busyAction, setBusyAction] = useState<boolean>(false);
 const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!user) router.replace("/login");
-    else fetchProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+useEffect(() => {
+  if (!user?.userId) {
+    router.replace("/login");
+    return;
+  }
+  fetchProducts();
+}, [user, router]);
+
 
   const showBanner = (type: "success" | "error", text: string) => {
     setBanner({ type, text });
@@ -55,7 +58,7 @@ const [deleteId, setDeleteId] = useState<string | null>(null);
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/client/products/${user.userId}`);
+const res = await fetch(`/api/client/products/${user!.userId}`);
       const payload = await res.json();
       if (!res.ok) throw new Error(payload.error || "Failed to fetch");
       setProducts(payload.products || []);
