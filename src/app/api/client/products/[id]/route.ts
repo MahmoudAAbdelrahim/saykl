@@ -1,11 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+// src/app/api/client/products/[id]/route.js
+import { NextResponse } from "next/server";
 import { connectDB } from "../../../../../lib/db";
-import Product, { IProduct } from "../../../../../backend/models/Product";
+import Product from "../../../../../backend/models/Product";
 
-export async function GET(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
+export async function GET(req, context) {
   try {
     await connectDB();
     const { id } = context.params;
@@ -14,7 +12,7 @@ export async function GET(
       return NextResponse.json({ error: "Missing ownerId" }, { status: 400 });
     }
 
-    const products: IProduct[] = await Product.find({ ownerId: id }).sort({
+    const products = await Product.find({ ownerId: id }).sort({
       createdAt: -1,
     });
 
