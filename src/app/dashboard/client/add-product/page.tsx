@@ -34,6 +34,13 @@ const AddProductPage: React.FC = () => {
     setBanner({ type, text });
     setTimeout(() => setBanner(null), 4000);
   };
+if (user.role !== "craftsman" && user.role !== "admin") {
+  return (
+    <div className="h-screen flex justify-center items-center bg-slate-900 text-white text-xl">
+      لا تملك صلاحية لإضافة منتجات.
+    </div>
+  );
+}
 
   const handleSubmit = async () => {
     if (!name || !description || !price || !category || !imageFile) {

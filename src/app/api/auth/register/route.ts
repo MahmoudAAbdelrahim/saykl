@@ -6,22 +6,22 @@ import User from "@/backend/models/User";
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
+const { name, email, phone, password, role } = await req.json();
 
-    const { name, email, phone, password } = await req.json();
+if (!["client", "craftsman", "admin"].includes(role)) {
+  return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+}
 
-    // التحقق من البيانات
-    if (!name || !email || !phone || !password) {
-      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
-    }
 
     // التحقق من وجود المستخدم مسبقًا
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json({ error: "Email already in use" }, { status: 400 });
     }
+    
+const newUser = await User.create({ name, email, phone, password, role });
 
     // إنشاء المستخدم
-    const newUser = await User.create({ name, email, phone, password });
 
     return NextResponse.json({ message: "User created successfully", userId: newUser._id });
   } catch (err) {

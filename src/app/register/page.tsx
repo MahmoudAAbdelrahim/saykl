@@ -11,7 +11,7 @@ type User = {
   name: string;
   email: string;
   phone?: string;
-  role: "client" | "admin";
+  role: "client" | "craftsman" | "admin";
   userId: string;
 };
 
@@ -26,6 +26,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [role, setRole] = useState<"client" | "craftsman">("client");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +34,8 @@ const RegisterPage = () => {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, phone }),
+        body: JSON.stringify({ name, email, password, phone, role }),
+
       });
 
       const data = await res.json();
@@ -46,13 +48,13 @@ const RegisterPage = () => {
       setMessage(t.accountCreated);
 
       // ✅ نستخدم الـ type اللي فوق
-      const newUser: User = {
-        name,
-        email,
-        phone,
-        role: "client",            // ثابتة كـ client
-        userId: String(data.userId) // نحولها String احتياطي
-      };
+const newUser: User = {
+  name,
+  email,
+  phone,
+  role: role as "client" | "craftsman" | "admin",
+  userId: String(data.userId),
+};
 
       // حفظ في localStorage + تحديث context
       localStorage.setItem("user", JSON.stringify(newUser));
@@ -75,6 +77,18 @@ const RegisterPage = () => {
         </h1>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
+        <div className="relative">
+  <label className="block text-gray-700 mb-2">اختر نوع الحساب</label>
+  <select
+    value={role}
+    onChange={(e) => setRole(e.target.value as "client" | "craftsman")}
+    className="w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none"
+  >
+    <option value="client">عميل</option>
+    <option value="craftsman">صنايعي</option>
+  </select>
+</div>
+
           {/* الاسم الكامل */}
           <div className="relative">
             <input

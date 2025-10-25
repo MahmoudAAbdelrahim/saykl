@@ -1,4 +1,3 @@
-// src/app/dashboard/page.tsx
 "use client";
 
 import React, { useEffect } from "react";
@@ -10,15 +9,12 @@ import Link from "next/link";
 
 const DashboardPage: React.FC = () => {
   const { lang } = useLanguage();
-  const t = translations[lang]; // 🟢 كله من الترجمة
+  const t = translations[lang];
   const { user } = useUser();
   const router = useRouter();
 
-  // لو مش مسجل → رجّعه على طول
   useEffect(() => {
-    if (!user) {
-      router.replace("/login");
-    }
+    if (!user) router.replace("/login");
   }, [user, router]);
 
   if (!user) return null;
@@ -45,42 +41,73 @@ const DashboardPage: React.FC = () => {
             </div>
           </header>
 
-          {/* المحتوى */}
+          {/* المحتوى حسب الدور */}
           <main className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* اليسار */}
             <section className="col-span-1 md:col-span-2 space-y-6">
+              {/* 🟢 جزء الأكشنز */}
               <div className="bg-gradient-to-r from-white to-slate-50 border rounded-lg p-5 shadow-sm">
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                  {t.quickActions}
-                </h2>
-                <div className="flex flex-wrap gap-3">
-                  <Link href="/dashboard/client/add-product" className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
-                    {t.addProduct}
-                  </Link>
+                <h2 className="text-xl font-semibold text-gray-800 mb-2">{t.quickActions}</h2>
 
-                  <Link href="/products" className="px-4 py-2 rounded-lg bg-gray-100 border text-gray-800 hover:bg-gray-200 transition">
-                    {t.browseProducts}
-                  </Link>
-
-                  {user.role === "client" && (
-                    <Link href="/dashboard/client/products" className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition">
-                      {t.myProducts}
+                {/* لو عميل */}
+                {user.role === "client" && (
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href="/dashboard/client/search-craftsman"
+                      className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                    >
+                      {t.findCraftsman}
                     </Link>
-                  )}
 
-                  {user.role === "admin" && (
-                    <>
-                      <Link href="/dashboard/admin/products" className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
-                        {t.manageProducts}
-                      </Link>
-                      <Link href="/dashboard/admin/users" className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition">
-                        {t.manageUsers}
-                      </Link>
-                    </>
-                  )}
-                </div>
+                    <Link
+                      href="/dashboard/client/compare"
+                      className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+                    >
+                      {t.compareCraftsmen}
+                    </Link>
+                  </div>
+                )}
+
+                {/* لو صنايعي */}
+                {user.role === "craftsman" && (
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href="/dashboard/craftsman/add-service"
+                      className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+                    >
+                      {t.addService}
+                    </Link>
+
+                    <Link
+                      href="/dashboard/craftsman/services"
+                      className="px-4 py-2 rounded-lg bg-gray-100 border text-gray-800 hover:bg-gray-200 transition"
+                    >
+                      {t.myServices}
+                    </Link>
+                  </div>
+                )}
+
+                {/* لو أدمن */}
+                {user.role === "admin" && (
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href="/dashboard/admin/products"
+                      className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
+                    >
+                      {t.manageProducts}
+                    </Link>
+
+                    <Link
+                      href="/dashboard/admin/users"
+                      className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                    >
+                      {t.manageUsers}
+                    </Link>
+                  </div>
+                )}
               </div>
 
+              {/* 🟡 النشاط */}
               <div className="bg-white border rounded-lg p-5 shadow-sm">
                 <h3 className="text-lg font-medium text-gray-800 mb-2">{t.recentActivity}</h3>
                 <p className="text-sm text-gray-600">{t.recentActivityHint}</p>

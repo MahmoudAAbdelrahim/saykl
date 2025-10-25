@@ -117,7 +117,10 @@ export const translations = {
     notAllowedEdit: "Not allowed to edit",
     selectImages: "Select up to 5 images",
     imagesSelected: "images selected",
-
+    findCraftsman: "Find Craftsman",
+compareCraftsmen: "Compare Nearby Craftsmen",
+addService: "Add Service",
+myServices: "My Services",
   },
   ar: {
     home: "الرئيسية",
@@ -236,5 +239,9 @@ export const translations = {
     notAllowedEdit: "غير مسموح بالتعديل",
     selectImages: "اختر حتى 5 صور",
     imagesSelected: "صور محددة",
+    findCraftsman: "ابحث عن صنايعي",
+compareCraftsmen: "قارن بين الصنايعية القريبين منك",
+addService: "اعرض خدمة جديدة",
+myServices: "شوف خدماتك",
   }
 };

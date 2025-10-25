@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+
 export interface IUser extends mongoose.Document {
   name: string;
   email: string;
   phone: string;
   password: string;
-  createdAt:Date;
-  role: "client" | "admin";
+  createdAt: Date;
+  role: "client" | "craftsman" | "admin"; // ✅ ضيف craftsman هنا
   comparePassword: (candidatePassword: string) => Promise<boolean>;
 }
 
@@ -17,7 +18,8 @@ const UserSchema = new mongoose.Schema<IUser>({
   phone: { type: String, required: true },
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-  role: { type: String, enum: ["client", "admin"], default: "client" },
+  role: { type: String, enum: ["client", "craftsman", "admin"], default: "client" },
+
 });
 
 // تشفير الباسورد قبل الحفظ
